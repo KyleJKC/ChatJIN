@@ -7,7 +7,6 @@ import {
   Slider,
   HoverCard,
   InputNumber,
-  SelectDropDown,
   HoverCardTrigger,
 } from '~/components/ui';
 import { cn, defaultTextProps, optionText, removeFocusOutlines } from '~/utils/';
@@ -16,12 +15,15 @@ import type { TModelSelectProps } from '~/common';
 import OptionHover from './OptionHover';
 import { ESide } from '~/common';
 
-export default function Settings({ conversation, setOption, models, readonly }: TModelSelectProps) {
+export default function Settings({
+  conversation,
+  setOption,
+  readonly,
+}: Omit<TModelSelectProps, 'models'>) {
   const localize = useLocalize();
   const {
     endpoint,
     endpointType,
-    model,
     chatGptLabel,
     promptPrefix,
     temperature,
@@ -66,7 +68,6 @@ export default function Settings({ conversation, setOption, models, readonly }: 
     return null;
   }
 
-  const setModel = setOption('model');
   const setResendFiles = setOption('resendFiles');
   const setImageDetail = setOption('imageDetail');
 
@@ -75,16 +76,6 @@ export default function Settings({ conversation, setOption, models, readonly }: 
   return (
     <div className="grid grid-cols-5 gap-6">
       <div className="col-span-5 flex flex-col items-center justify-start gap-6 sm:col-span-3">
-        <div className="grid w-full items-center gap-2">
-          <SelectDropDown
-            value={model ?? ''}
-            setValue={setModel}
-            availableValues={models}
-            disabled={readonly}
-            className={cn(defaultTextProps, 'flex w-full resize-none', removeFocusOutlines)}
-            containerClassName="flex w-full resize-none"
-          />
-        </div>
         <div className="grid w-full items-center gap-2">
           <Label htmlFor="chatGptLabel" className="text-left text-sm font-medium">
             {localize('com_endpoint_custom_name')}{' '}
