@@ -26,6 +26,12 @@ services:
       - ./librechat.yaml:/app/librechat.yaml
       - ./logs:/app/api/logs
       - ./uploads:/app/uploads
+      - ./client/public/assets/apple-touch-icon-180x180.png:/app/client/public/assets/apple-touch-icon-180x180.png
+      - ./client/public/assets/favicon-16x16.png:/app/client/public/assets/favicon-16x16.png
+      - ./client/public/assets/favicon-32x32.png:/app/client/public/assets/favicon-32x32.png
+      - ./client/public/assets/apple-touch-icon-180x180.png:/app/client/dist/assets/apple-touch-icon-180x180.png
+      - ./client/public/assets/favicon-16x16.png:/app/client/dist/assets/favicon-16x16.png
+      - ./client/public/assets/favicon-32x32.png:/app/client/dist/assets/favicon-32x32.png
   client:
     build:
       context: .
