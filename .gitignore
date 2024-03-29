@@ -48,6 +48,10 @@ bower_components/
 .floo
 .flooignore
 
+#config file
+librechat.yaml
+librechat.yml
+
 # Environment
 .npmrc
 .env*
