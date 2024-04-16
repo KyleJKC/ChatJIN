@@ -11,6 +11,17 @@ weight: -10
     Certain changes in the updates may impact cookies, leading to unexpected behaviors if not cleared properly.
 
 ---
+## v0.7.1+
+
+!!! info "🔍 Google Search Plugin"
+
+    - **[Google Search Plugin](../features/plugins/google_search.md)**: Changed the environment variable for this plugin from `GOOGLE_API_KEY` to `GOOGLE_SEARCH_API_KEY` due to a conflict with the Google Generative AI library pulling this variable automatically. If you are using this plugin, please update your `.env` file accordingly.
+
+## v0.7.0+
+
+!!! info "🗃️ RAG API (Chat with Files)"
+
+    - **RAG API Update**: The default Docker compose files now include a Python API and Vector Database for RAG (Retrieval-Augmented Generation). Read more about this in the [RAG API page](../features/rag_api.md)
 
 ## v0.6.10+ (-dev build)
 

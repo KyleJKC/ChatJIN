@@ -1,68 +1,19 @@
 import debounce from 'lodash/debounce';
-import React, { useEffect, useRef, useCallback } from 'react';
+import { useRecoilValue } from 'recoil';
 import { EModelEndpoint } from 'librechat-data-provider';
+import React, { useEffect, useRef, useCallback } from 'react';
 import type { TEndpointOption } from 'librechat-data-provider';
 import type { UseFormSetValue } from 'react-hook-form';
 import type { KeyboardEvent } from 'react';
+import { forceResize, insertTextAtCursor, trimUndoneRange, getAssistantName } from '~/utils';
 import { useAssistantsMapContext } from '~/Providers/AssistantsMapContext';
 import useGetSender from '~/hooks/Conversations/useGetSender';
 import useFileHandling from '~/hooks/Files/useFileHandling';
 import { useChatContext } from '~/Providers/ChatContext';
 import useLocalize from '~/hooks/useLocalize';
+import store from '~/store';
 
 type KeyEvent = KeyboardEvent<HTMLTextAreaElement>;
-
-function insertTextAtCursor(element: HTMLTextAreaElement, textToInsert: string) {
-  element.focus();
-
-  // Use the browser's built-in undoable actions if possible
-  if (window.getSelection() && document.queryCommandSupported('insertText')) {
-    document.execCommand('insertText', false, textToInsert);
-  } else {
-    console.warn('insertTextAtCursor: document.execCommand is not supported');
-    const startPos = element.selectionStart;
-    const endPos = element.selectionEnd;
-    const beforeText = element.value.substring(0, startPos);
-    const afterText = element.value.substring(endPos);
-    element.value = beforeText + textToInsert + afterText;
-    element.selectionStart = element.selectionEnd = startPos + textToInsert.length;
-    const event = new Event('input', { bubbles: true });
-    element.dispatchEvent(event);
-  }
-}
-
-/**
- * Necessary resize helper for edge cases where paste doesn't update the container height.
- *
- 1) Resetting the height to 'auto' forces the component to recalculate height based on its current content
-
- 2) Forcing a reflow. Accessing offsetHeight will cause a reflow of the page,
-    ensuring that the reset height takes effect before resetting back to the scrollHeight.
-    This step is necessary because changes to the DOM do not instantly cause reflows.
-
- 3) Reseting back to scrollHeight reads and applies the ideal height for the current content dynamically
- */
-const forceResize = (textAreaRef: React.RefObject<HTMLTextAreaElement>) => {
-  if (textAreaRef.current) {
-    textAreaRef.current.style.height = 'auto';
-    textAreaRef.current.offsetHeight;
-    textAreaRef.current.style.height = `${textAreaRef.current.scrollHeight}px`;
-  }
-};
-
-const getAssistantName = ({
-  name,
-  localize,
-}: {
-  name?: string;
-  localize: (phraseKey: string, ...values: string[]) => string;
-}) => {
-  if (name && name.length > 0) {
-    return name;
-  } else {
-    return localize('com_ui_assistant');
-  }
-};
 
 export default function useTextarea({
   textAreaRef,
@@ -78,6 +29,7 @@ export default function useTextarea({
   disabled?: boolean;
 }) {
   const assistantMap = useAssistantsMapContext();
+  const enterToSend = useRecoilValue(store.enterToSend);
   const {
     conversation,
     isSubmitting,
@@ -132,14 +84,14 @@ export default function useTextarea({
     }
 
     const getPlaceholderText = () => {
+      if (disabled) {
+        return localize('com_endpoint_config_placeholder');
+      }
       if (
         conversation?.endpoint === EModelEndpoint.assistants &&
         (!conversation?.assistant_id || !assistantMap?.[conversation?.assistant_id ?? ''])
       ) {
         return localize('com_endpoint_assistant_placeholder');
-      }
-      if (disabled) {
-        return localize('com_endpoint_config_placeholder');
       }
 
       if (isNotAppendable) {
@@ -185,30 +137,50 @@ export default function useTextarea({
     assistantMap,
   ]);
 
-  const handleKeyDown = (e: KeyEvent) => {
-    if (e.key === 'Enter' && isSubmitting) {
-      return;
-    }
+  const handleKeyDown = useCallback(
+    (e: KeyEvent) => {
+      if (e.key === 'Enter' && isSubmitting) {
+        return;
+      }
 
-    const isNonShiftEnter = e.key === 'Enter' && !e.shiftKey;
+      const isNonShiftEnter = e.key === 'Enter' && !e.shiftKey;
 
-    if (isNonShiftEnter && filesLoading) {
-      e.preventDefault();
-    }
+      if (isNonShiftEnter && filesLoading) {
+        e.preventDefault();
+      }
 
-    if (isNonShiftEnter) {
-      e.preventDefault();
-    }
+      if (isNonShiftEnter) {
+        e.preventDefault();
+      }
 
-    if (isNonShiftEnter && !isComposing?.current) {
-      submitButtonRef.current?.click();
-    }
-  };
+      if (e.key === 'Enter' && !enterToSend && textAreaRef.current) {
+        insertTextAtCursor(textAreaRef.current, '\n');
+        forceResize(textAreaRef);
+        return;
+      }
+
+      if (isNonShiftEnter && !isComposing?.current) {
+        submitButtonRef.current?.click();
+      }
+    },
+    [isSubmitting, filesLoading, enterToSend, textAreaRef, submitButtonRef],
+  );
 
   const handleKeyUp = (e: KeyEvent) => {
     const target = e.target as HTMLTextAreaElement;
 
-    if (e.keyCode === 8 && target.value.trim() === '') {
+    const isUndo = e.key === 'z' && (e.ctrlKey || e.metaKey);
+    if (isUndo && target.value.trim() === '') {
+      textAreaRef.current?.setRangeText('', 0, textAreaRef.current?.value?.length, 'end');
+      setValue('text', '', { shouldValidate: true });
+      forceResize(textAreaRef);
+    } else if (isUndo) {
+      trimUndoneRange(textAreaRef);
+      setValue('text', '', { shouldValidate: true });
+      forceResize(textAreaRef);
+    }
+
+    if ((e.keyCode === 8 || e.key === 'Backspace') && target.value.trim() === '') {
       textAreaRef.current?.setRangeText('', 0, textAreaRef.current?.value?.length, 'end');
     }
 
