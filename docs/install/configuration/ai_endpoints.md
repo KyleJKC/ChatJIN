@@ -14,6 +14,39 @@ In all of the examples, arbitrary environment variable names are defined but you
 
 Some of the endpoints are marked as **Known,** which means they might have special handling and/or an icon already provided in the app for you.
 
+## Cohere
+> Cohere API key: [dashboard.cohere.com](https://dashboard.cohere.com/)
+
+**Notes:**
+
+- **Known:** icon provided.
+- Experimental: does not follow OpenAI-spec, uses a new method for endpoint compatibility, shares some similarities and parameters.
+- For a full list of Cohere-specific parameters, see the [Cohere API documentation](https://docs.cohere.com/reference/chat).
+- Note: The following parameters are recognized between OpenAI and Cohere. Most are removed in the example config below to prefer Cohere's default settings:
+    - `stop`: mapped to `stopSequences`
+    - `top_p`: mapped to `p`, different min/max values
+    - `frequency_penalty`: mapped to `frequencyPenalty`, different min/max values
+    - `presence_penalty`: mapped to `presencePenalty`, different min/max values
+    - `model`: shared, included by default.
+    - `stream`: shared, included by default.
+    - `max_tokens`: shared, mapped to `maxTokens`, not included by default.
+
+
+```yaml
+    - name: "cohere"
+      apiKey: "${COHERE_API_KEY}"
+      baseURL: "https://api.cohere.ai/v1"
+      models:
+        default: ["command-r","command-r-plus","command-light","command-light-nightly","command","command-nightly"]
+        fetch: false
+      modelDisplayLabel: "cohere"
+      titleModel: "command"
+      dropParams: ["stop", "user", "frequency_penalty", "presence_penalty", "temperature", "top_p"]
+```
+
+![image](https://github.com/danny-avila/LibreChat/assets/110412045/03549e00-243c-4539-ac9a-0d782af7cd6c)
+
+
 ## Groq
 > groq API key: [wow.groq.com](https://wow.groq.com/)
 
@@ -31,9 +64,11 @@ Some of the endpoints are marked as **Known,** which means they might have speci
       baseURL: "https://api.groq.com/openai/v1/"
       models:
         default: [
+          "llama3-70b-8192",
+          "llama3-8b-8192",
           "llama2-70b-4096",
           "mixtral-8x7b-32768",
-          "gemma-7b-it"
+          "gemma-7b-it",
           ]
         fetch: false
       titleConvo: true
@@ -298,6 +333,7 @@ Some of the endpoints are marked as **Known,** which means they might have speci
     - name: "LiteLLM"
       apiKey: "sk-from-config-file"
       baseURL: "http://localhost:8000/v1"
+      # if using LiteLLM example in docker-compose.override.yml.example, use "http://litellm:8000/v1"
       models:
         default: ["gpt-3.5-turbo"]
         fetch: true
@@ -322,7 +358,8 @@ Some of the endpoints are marked as **Known,** which means they might have speci
 ```yaml
     - name: "Ollama"
       apiKey: "ollama"
-      baseURL: "http://localhost:11434/v1/"
+      # use 'host.docker.internal' instead of localhost if running LibreChat in a docker container
+      baseURL: "http://localhost:11434/v1/chat/completions" 
       models:
         default: [
           "llama2",
@@ -339,3 +376,31 @@ Some of the endpoints are marked as **Known,** which means they might have speci
       forcePrompt: false
       modelDisplayLabel: "Ollama"
 ```
+
+!!! tip "Ollama -> llama3"
+    
+    To prevent the behavior where llama3 does not stop generating, add this `addParams` block to the config:
+    
+    ```yaml
+    - name: "Ollama"
+      apiKey: "ollama"
+      baseURL: "http://host.docker.internal:11434/v1/" 
+      models:
+        default: [
+          "llama3"
+          ]
+        fetch: false # fetching list of models is not supported
+      titleConvo: true
+      titleModel: "llama3"
+      summarize: false
+      summaryModel: "llama3"
+      forcePrompt: false
+      modelDisplayLabel: "Ollama"
+      addParams:
+            "stop": [
+              "<|start_header_id|>",
+              "<|end_header_id|>",
+              "<|eot_id|>",
+              "<|reserved_special_token"
+            ]
+    ```
