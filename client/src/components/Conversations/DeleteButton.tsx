@@ -58,7 +58,7 @@ export default function DeleteButton({
         <Tooltip>
           <TooltipTrigger asChild>
             <span>
-              <TrashIcon />
+              <TrashIcon className="h-5 w-5" />
             </span>
           </TooltipTrigger>
           <TooltipContent side="top" sideOffset={0}>
