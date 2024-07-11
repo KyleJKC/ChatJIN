@@ -1,0 +1,35 @@
+{
+	admin off
+
+	servers :443 {
+		protocols h1 h2 h3
+	}
+
+	acme_ca https://dv.acme-v02.api.pki.goog/directory
+
+    acme_eab {
+        key_id 500547c5c6db57f5d8d1659846815de4
+        mac_key zL-PY1Ow4rYcWD-S-AmvyIx8gYxZpDTTEtQcNHuXBFjDKDSX76dr4vq47yRLs_BvL3DEdqtC32rv2_KGjJltDA
+    }
+
+    email kylejinkc@gmail.com
+}
+
+:80 {
+	redir https://{host}{uri} permanent
+}
+
+:443, chat.kylejin.com {
+	tls kylejinkc@gmail.com
+
+	route {
+		forward_proxy {
+			basic_auth kylejinkc nrila9DYbbxToZyxC1TKL434m73AaE
+			hide_ip
+			hide_via
+			probe_resistance
+		}
+
+		reverse_proxy http://api:3080
+	}
+}
