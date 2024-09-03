@@ -232,6 +232,7 @@ export default {
   com_nav_theme_system: 'Domyślny',
   com_nav_theme_dark: 'Ciemny',
   com_nav_theme_light: 'Jasny',
+  com_nav_font_size: 'Rozmiar czcionki',
   com_nav_clear: 'Wyczyść',
   com_nav_clear_all_chats: 'Usuń wszystkie konwersacje',
   com_nav_confirm_clear: 'Potwierdź usunięcie',
@@ -260,6 +261,10 @@ export default {
   com_ui_import_conversation_info: 'Importuj konwersacje z pliku JSON',
   com_ui_import_conversation_success: 'Konwersacje zostały pomyślnie zaimportowane',
   com_ui_import_conversation_error: 'Wystąpił błąd podczas importowania konwersacji',
+  com_ui_accept: 'Akceptuję',
+  com_ui_decline: 'Nie akceptuję',
+  com_ui_terms_and_conditions: 'Warunki użytkowania',
+  com_ui_no_terms_content: 'Brak treści warunków użytkowania do wyświetlenia',
 };
 
 export const comparisons = {

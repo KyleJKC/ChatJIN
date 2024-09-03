@@ -90,6 +90,10 @@ export default {
   com_ui_bookmarks_update_error: 'Ett fel uppstod vid uppdateringen av bokmärket',
   com_ui_bookmarks_delete_error: 'Ett fel uppstod vid raderingen av bokmärket',
   com_ui_bookmarks_add_to_conversation: 'Lägg till i nuvarande konversation',
+  com_ui_accept: 'Jag accepterar',
+  com_ui_decline: 'Jag accepterar inte',
+  com_ui_terms_and_conditions: 'Villkor för användning',
+  com_ui_no_terms_content: 'Ingen innehåll för villkor för användning att visa',
   com_auth_error_login:
     'Kunde inte logga in med den angivna informationen. Kontrollera dina uppgifter och försök igen.',
   com_auth_error_login_rl:
@@ -289,6 +293,7 @@ export default {
   com_nav_theme_system: 'System',
   com_nav_theme_dark: 'Mörkt',
   com_nav_theme_light: 'Ljust',
+  com_nav_font_size: 'Textstorlek',
   com_nav_clear_all_chats: 'Rensa alla chattar',
   com_nav_confirm_clear: 'Bekräfta rensning',
   com_nav_close_sidebar: 'Stäng sidofält',

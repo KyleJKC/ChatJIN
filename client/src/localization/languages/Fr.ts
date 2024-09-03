@@ -104,6 +104,10 @@ export default {
   com_ui_bookmarks_update_error: 'Une erreur est survenue lors de la mise à jour du signet',
   com_ui_bookmarks_delete_error: 'Une erreur est survenue lors de la suppression du signet',
   com_ui_bookmarks_add_to_conversation: 'Ajouter à la conversation en cours',
+  com_ui_accept: 'J\'accepte',
+  com_ui_decline: 'Je n\'accepte pas',
+  com_ui_terms_and_conditions: 'Conditions d\'utilisation',
+  com_ui_no_terms_content: 'Aucun contenu de conditions d\'utilisation à afficher',
   com_auth_error_login:
     'Impossible de se connecter avec les informations fournies. Veuillez vérifier vos identifiants et réessayer.',
   com_auth_error_login_rl:
@@ -356,6 +360,7 @@ export default {
   com_nav_theme_system: 'Système',
   com_nav_theme_dark: 'Sombre',
   com_nav_theme_light: 'Clair',
+  com_nav_font_size: 'Taille de police',
   com_nav_user_name_display: 'Afficher le nom d\'utilisateur dans les messages',
   com_nav_save_drafts: 'Enregistrer les brouillons localement',
   com_nav_clear_all_chats: 'Effacer toutes les conversations',
@@ -417,7 +422,7 @@ export default {
   com_ui_date_december: 'Décembre',
   com_ui_nothing_found: 'Aucun résultat trouvé',
   com_ui_go_to_conversation: 'Aller à la conversation',
-  com_nav_tool_add: 'Ajouter',
+  com_ui_add: 'Ajouter',
   com_nav_tool_remove: 'Supprimer',
   com_nav_tool_dialog: 'Outils de l\'assistant',
   com_nav_tool_dialog_description:
@@ -623,7 +628,7 @@ export default {
   com_ui_upload_invalid_var:
     'Fichier non valide pour le téléchargement. L\'image ne doit pas dépasser {0} Mo',
   com_ui_read_aloud: 'Lire à haute voix',
-  com_ui_add: 'Ajouter un modèle ou un préréglage pour une réponse supplémentaire',
+  com_ui_add_model_preset: 'Ajouter un modèle ou un préréglage pour une réponse supplémentaire',
   com_ui_loading: 'Chargement...',
   com_ui_all_proper: 'Tout',
   com_ui_chat: 'Discussion',
@@ -2207,7 +2212,7 @@ export const comparisons = {
     english: 'Go to conversation',
     translated: 'Aller à la conversation',
   },
-  com_nav_tool_add: {
+  com_ui_add: {
     english: 'Add',
     translated: 'Ajouter',
   },
