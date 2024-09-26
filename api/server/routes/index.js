@@ -8,6 +8,7 @@ const presets = require('./presets');
 const prompts = require('./prompts');
 const balance = require('./balance');
 const plugins = require('./plugins');
+const bedrock = require('./bedrock');
 const search = require('./search');
 const models = require('./models');
 const convos = require('./convos');
@@ -23,6 +24,7 @@ const edit = require('./edit');
 const keys = require('./keys');
 const user = require('./user');
 const ask = require('./ask');
+const banner = require('./banner');
 
 module.exports = {
   ask,
@@ -36,6 +38,7 @@ module.exports = {
   files,
   share,
   agents,
+  bedrock,
   convos,
   search,
   prompts,
@@ -50,4 +53,5 @@ module.exports = {
   assistants,
   categories,
   staticRoute,
+  banner,
 };
